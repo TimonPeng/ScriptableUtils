@@ -9,13 +9,17 @@ Utility libraries for Scriptable.
 All rules almost follow the [Scriptable Docs](https://docs.scriptable.app).
 
 - Element tag name support lowercase or capitalize first letter
-- Supports 6 prototype global settings
+- Supports 6 prototypes for global
   - textColor
   - font
   - textOpacity
   - shadowColor
   - shadowRadius
   - shadowOffset
+- Support conditional:
+  ```javascript
+  <Text if="2 > 1" />
+  ```
 
 [Examples](examples/)
 

@@ -250,20 +250,25 @@ class WidgetXML extends XML2JSON {
       if (initializerProps && !content)
         throw new Error(`Element ${tag} must have a content`);
 
-      const childElement = eval(`parentElement.add${tag}(${content})`);
+      // if conditional
+      const { if: ifConditional } = attributes;
 
-      // set global prototypes for element
-      for (const key of this.globalPrototypes) {
-        if (prototypes.includes(key) && this[key])
-          eval(`childElement.${key} = ${this[key]}`);
+      if (!ifConditional || (ifConditional && eval(ifConditional))) {
+        const childElement = eval(`parentElement.add${tag}(${content})`);
+
+        // set global prototypes for element
+        for (const key of this.globalPrototypes) {
+          if (prototypes.includes(key) && this[key])
+            eval(`childElement.${key} = ${this[key]}`);
+        }
+
+        for (const [key, value] of Object.entries(attributes)) {
+          if (prototypes.includes(key)) eval(`childElement.${key} = ${value}`);
+          else if (functions.includes(key)) eval(`childElement.${key}${value}`);
+        }
+
+        this.setElement(childElement, child);
       }
-
-      for (const [key, value] of Object.entries(attributes)) {
-        if (prototypes.includes(key)) eval(`childElement.${key} = ${value}`);
-        else if (functions.includes(key)) eval(`childElement.${key}${value}`);
-      }
-
-      this.setElement(childElement, child);
     }
   }
 }
